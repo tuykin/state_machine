@@ -1,0 +1,7 @@
+AllCops:
+  Include:
+    - 'lib/*'
+Metrics/LineLength:
+  Max: 99
+Documentation:
+  Enabled: false
