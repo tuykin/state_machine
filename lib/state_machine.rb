@@ -49,6 +49,12 @@ module StateMachine
       setup_initial_state(state) if initial
     end
 
+    def event(name, &block)
+      define_method "#{name}!" do
+        instance_variable_set('@state', "#{name}ing".to_sym)
+      end
+    end
+
     private
 
     def setup_initial_state(state)

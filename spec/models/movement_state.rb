@@ -5,9 +5,9 @@ class MovementState
   state :walking
   state :running
 
-  # event :walk do
-  #   transitions from: :standing, to: :walking
-  # end
+  event :walk do
+    # transitions from: :standing, to: :walking
+  end
 
   # event :run do
   #   transitions from: [:standing, :walking], to: :running
