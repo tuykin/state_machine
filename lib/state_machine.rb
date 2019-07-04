@@ -7,8 +7,18 @@ module StateMachine
     base.extend(ClassMethods)
   end
 
+  def initialize(state = nil)
+    @state = state || self.class.initial_state
+
+    super()
+  end
+
   def states
     self.class.states
+  end
+
+  def state
+    @state
   end
 
   module ClassMethods

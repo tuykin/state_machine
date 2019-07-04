@@ -32,6 +32,14 @@ describe StateMachine do
       }.to raise_error(StateMachine::InitialStateDuplicateError)
     end
 
+    it 'should have current state' do
+      expect(obj.state).to eq(:standing)
+    end
+
+    it 'should be initialized with custom state' do
+      expect(klass.new(:walking).state).to eq(:walking)
+    end
+
     it 'should have all states defined' do
       expect(obj.states).to eq([:standing, :walking, :running])
     end
@@ -43,7 +51,6 @@ describe StateMachine do
     end
 
     it 'should define state only once'
-    it 'should be initialized with custom state'
   end
 
   # describe 'events'
