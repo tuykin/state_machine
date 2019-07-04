@@ -30,6 +30,8 @@ end
 movement_state = MovementState.new(:standing)
 movement_state.walk!
 movement_state.walking? # => true
+movement_state.can_walk? # => false
+movement_state.can_run? # => true
 ```
 
 Consider implementing the following features:
@@ -42,3 +44,10 @@ Consider implementing the following features:
 
 Bonus task:
 - Write a script to generate a diagram for the state machine showing states and possible transitions (e.g., using `graphviz` gem).
+
+TODO:
+- extract state to class
+- add errors
+
+QUESTIONS:
+- constructor is being overriden?
