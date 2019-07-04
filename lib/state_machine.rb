@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 module StateMachine
+  InitialStateDuplicateError = Class.new(RuntimeError)
+
   def self.included(base)
     base.extend(ClassMethods)
   end
@@ -11,17 +13,33 @@ module StateMachine
 
   module ClassMethods
     def setup
-      @@states ||= []
+      @states ||= []
     end
 
     def states
-      @@states
+      @states
+    end
+
+    def initial_state
+      @initial_state
     end
 
     def state(name, initial: false)
       setup
 
-      @@states << name
+      state = name # TODO: extract to class
+
+      @states << state
+
+      setup_initial_state(state) if initial
+    end
+
+    private
+
+    def setup_initial_state(state)
+      raise InitialStateDuplicateError unless initial_state.nil?
+
+      @initial_state = state
     end
   end
 end

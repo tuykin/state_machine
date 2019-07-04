@@ -1,17 +1,31 @@
 require 'state_machine'
-require 'movement_state'
+require 'models/movement_state'
 
 describe StateMachine do
-  let(:test_class) { MovementState }
-  let(:obj) { test_class.new }
+  let(:klass) { MovementState }
+  let(:obj) { klass.new }
 
   describe '#initialization' do
     it do
-      expect(obj.class).to eq(test_class)
+      expect(obj.class).to eq(klass)
     end
   end
 
   describe 'states' do
+    it 'should have all states defined' do
+      expect(klass.states).to eq([:standing, :walking, :running])
+    end
+
+    it 'should have initial state' do
+      expect(klass.initial_state).to eq(:standing)
+    end
+
+    it 'should have only one initial state' do
+      expect {
+        require 'models/initial_state_duplicate_class'
+      }.to raise_error(StateMachine::InitialStateDuplicateError)
+    end
+
     it 'should have all states defined' do
       expect(obj.states).to eq([:standing, :walking, :running])
     end
@@ -22,7 +36,6 @@ describe StateMachine do
       expect(obj.running?).to be false
     end
 
-    it 'should have only one initial state'
     it 'should define state only once'
     it 'should be initialized with custom state'
   end
