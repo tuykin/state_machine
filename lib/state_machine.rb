@@ -2,6 +2,7 @@
 
 module StateMachine
   InitialStateDuplicateError = Class.new(RuntimeError)
+  StateAlreadyDefinedError = Class.new(RuntimeError)
 
   def self.included(base)
     base.extend(ClassMethods)
@@ -57,6 +58,8 @@ module StateMachine
     end
 
     def add_state(state)
+      raise StateAlreadyDefinedError if @states.include?(state)
+
       @states << state
     end
   end

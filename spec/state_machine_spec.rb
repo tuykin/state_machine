@@ -50,7 +50,11 @@ describe StateMachine do
       expect(obj.running?).to be false
     end
 
-    it 'should define state only once'
+    it 'should define state only once' do
+      expect {
+        require 'models/state_already_defined_class'
+      }.to raise_error(StateMachine::StateAlreadyDefinedError)
+    end
   end
 
   # describe 'events'
