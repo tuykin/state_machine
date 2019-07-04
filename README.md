@@ -48,7 +48,10 @@ Bonus task:
 TODO:
 - extract state to class
 - add errors
+- check if method already defined
+- check if <state>? exists
 
 QUESTIONS:
 - constructor is being overriden?
 - how to initialize on include?
+- initial state required?

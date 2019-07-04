@@ -29,7 +29,11 @@ module StateMachine
 
       state = name # TODO: extract to class
 
-      @states << state
+      add_state(state)
+
+      define_method "#{state}?" do
+        self.state == state
+      end
 
       setup_initial_state(state) if initial
     end
@@ -40,6 +44,10 @@ module StateMachine
       raise InitialStateDuplicateError unless initial_state.nil?
 
       @initial_state = state
+    end
+
+    def add_state(state)
+      @states << state
     end
   end
 end

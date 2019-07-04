@@ -5,6 +5,12 @@ describe StateMachine do
   let(:klass) { MovementState }
   let(:obj) { klass.new }
 
+  # TODO: remove
+  describe 'test' do
+    it do
+    end
+  end
+
   describe '#initialization' do
     it do
       expect(obj.class).to eq(klass)
