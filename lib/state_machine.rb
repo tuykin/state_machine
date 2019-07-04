@@ -6,6 +6,8 @@ module StateMachine
 
   def self.included(base)
     base.extend(ClassMethods)
+
+    base.send(:setup)
   end
 
   def initialize(state = nil)
@@ -23,10 +25,6 @@ module StateMachine
   end
 
   module ClassMethods
-    def setup
-      @states ||= []
-    end
-
     def states
       @states
     end
@@ -36,8 +34,6 @@ module StateMachine
     end
 
     def state(name, initial: false)
-      setup
-
       state = name # TODO: extract to class
 
       add_state(state)
@@ -51,11 +47,16 @@ module StateMachine
 
     def event(name, &block)
       define_method "#{name}!" do
-        instance_variable_set('@state', "#{name}ing".to_sym)
+        class_eval(&block)
       end
     end
 
     private
+
+    def setup
+      @states ||= []
+      @events ||= []
+    end
 
     def setup_initial_state(state)
       raise InitialStateDuplicateError unless initial_state.nil?
