@@ -20,13 +20,25 @@ module StateMachine
     self.class.states
   end
 
+  def events
+    self.class.events
+  end
+
   def state
     @state
+  end
+
+  def transit(from, to)
+    @state = to
   end
 
   module ClassMethods
     def states
       @states
+    end
+
+    def events
+      @events
     end
 
     def initial_state
@@ -46,16 +58,22 @@ module StateMachine
     end
 
     def event(name, &block)
+      @events[name] = yield block
+
       define_method "#{name}!" do
-        class_eval(&block)
+        transit(events[name][:from], events[name][:to])
       end
+    end
+
+    def transitions(from:, to:)
+      { from: [*from], to: to }
     end
 
     private
 
     def setup
       @states ||= []
-      @events ||= []
+      @events ||= {}
     end
 
     def setup_initial_state(state)

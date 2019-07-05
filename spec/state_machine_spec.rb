@@ -8,8 +8,6 @@ describe StateMachine do
   # TODO: remove
   describe 'test' do
     it do
-      obj.walk!
-      p obj.state
     end
   end
 
