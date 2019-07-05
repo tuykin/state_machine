@@ -32,6 +32,10 @@ module StateMachine
     @state = to
   end
 
+  def can_transit?(name)
+    events[name][:from].include?(state)
+  end
+
   module ClassMethods
     def states
       @states
@@ -62,6 +66,10 @@ module StateMachine
 
       define_method "#{name}!" do
         transit(events[name][:from], events[name][:to])
+      end
+
+      define_method "can_#{name}?" do
+        can_transit?(name)
       end
     end
 

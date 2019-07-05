@@ -63,15 +63,36 @@ describe StateMachine do
     it 'should transit to walking' do
       expect(obj.standing?).to be true
       expect(obj.walking?).to be false
+      expect(obj.running?).to be false
       expect(obj.state).to eq(:standing)
+
+      expect(obj.can_walk?).to be true
+      expect(obj.can_run?).to be true
+      expect(obj.can_hold?).to be false
 
       obj.walk!
 
       expect(obj.standing?).to be false
       expect(obj.walking?).to be true
+      expect(obj.running?).to be false
       expect(obj.state).to eq(:walking)
-    end
 
+      expect(obj.can_walk?).to be false
+      expect(obj.can_run?).to be true
+      expect(obj.can_hold?).to be true
+
+      obj.run!
+
+      expect(obj.can_walk?).to be false
+      expect(obj.can_run?).to be false
+      expect(obj.can_hold?).to be true
+
+      obj.hold!
+
+      expect(obj.can_walk?).to be true
+      expect(obj.can_run?).to be true
+      expect(obj.can_hold?).to be false
+    end
   end
 
   describe 'transitions' do
