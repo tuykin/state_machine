@@ -55,10 +55,48 @@ describe StateMachine do
         require 'models/state_already_defined_class'
       }.to raise_error(StateMachine::StateAlreadyDefinedError)
     end
+
+    it 'should define only allowed states'
   end
 
-  # describe 'events'
-  # describe 'transitions' do
-  #   it 'should have no undefined states (in transitions)'
-  # end
+  describe 'events' do
+    it 'should transit to walking' do
+      expect(obj.standing?).to be true
+      expect(obj.walking?).to be false
+      expect(obj.running?).to be false
+      expect(obj.state).to eq(:standing)
+
+      expect(obj.can_walk?).to be true
+      expect(obj.can_run?).to be true
+      expect(obj.can_hold?).to be false
+
+      obj.walk!
+
+      expect(obj.standing?).to be false
+      expect(obj.walking?).to be true
+      expect(obj.running?).to be false
+      expect(obj.state).to eq(:walking)
+
+      expect(obj.can_walk?).to be false
+      expect(obj.can_run?).to be true
+      expect(obj.can_hold?).to be true
+
+      obj.run!
+
+      expect(obj.can_walk?).to be false
+      expect(obj.can_run?).to be false
+      expect(obj.can_hold?).to be true
+
+      obj.hold!
+
+      expect(obj.can_walk?).to be true
+      expect(obj.can_run?).to be true
+      expect(obj.can_hold?).to be false
+    end
+  end
+
+  describe 'transitions' do
+    it 'should raise error when transition not allowed'
+    it 'should have no undefined states (in transitions)'
+  end
 end

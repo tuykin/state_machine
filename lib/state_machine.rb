@@ -6,6 +6,8 @@ module StateMachine
 
   def self.included(base)
     base.extend(ClassMethods)
+
+    base.send(:setup)
   end
 
   def initialize(state = nil)
@@ -18,17 +20,29 @@ module StateMachine
     self.class.states
   end
 
+  def events
+    self.class.events
+  end
+
   def state
     @state
   end
 
-  module ClassMethods
-    def setup
-      @states ||= []
-    end
+  def transit(from, to)
+    @state = to
+  end
 
+  def can_transit?(name)
+    events[name][:from].include?(state)
+  end
+
+  module ClassMethods
     def states
       @states
+    end
+
+    def events
+      @events
     end
 
     def initial_state
@@ -36,8 +50,6 @@ module StateMachine
     end
 
     def state(name, initial: false)
-      setup
-
       state = name # TODO: extract to class
 
       add_state(state)
@@ -49,7 +61,28 @@ module StateMachine
       setup_initial_state(state) if initial
     end
 
+    def event(name, &block)
+      @events[name] = yield block
+
+      define_method "#{name}!" do
+        transit(events[name][:from], events[name][:to])
+      end
+
+      define_method "can_#{name}?" do
+        can_transit?(name)
+      end
+    end
+
+    def transitions(from:, to:)
+      { from: [*from], to: to }
+    end
+
     private
+
+    def setup
+      @states ||= []
+      @events ||= {}
+    end
 
     def setup_initial_state(state)
       raise InitialStateDuplicateError unless initial_state.nil?

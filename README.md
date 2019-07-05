@@ -50,6 +50,7 @@ TODO:
 - add errors
 - check if method already defined
 - check if <state>? exists
+- check transitions
 
 QUESTIONS:
 - constructor is being overriden?
