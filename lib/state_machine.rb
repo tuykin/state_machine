@@ -28,7 +28,7 @@ module StateMachine
     @state
   end
 
-  def transit(from, to)
+  def transit(_from, to)
     @state = to
   end
 
