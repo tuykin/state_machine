@@ -5,6 +5,7 @@ module StateMachine
   StateAlreadyDefinedError = Class.new(RuntimeError)
   InvalidStateError = Class.new(RuntimeError)
   InvalidTransitionError = Class.new(RuntimeError)
+  GuardIsNotBooleanError = Class.new(RuntimeError)
 
   def self.included(base)
     base.extend(ClassMethods)
@@ -47,7 +48,7 @@ module StateMachine
   def fire_event(event_name)
     event = events[event_name]
 
-    if can_fire?(event)
+    if can_fire?(event) && allowed?(event)
       fire_callback(event[:before])
       transit(to: events[event_name][:to])
       fire_callback(event[:after])
@@ -58,11 +59,23 @@ module StateMachine
   end
 
   def fire_event!(event_name)
-    raise InvalidTransitionError unless fire_event(event_name)
+    raise InvalidTransitionError unless can_fire?(events[event_name])
+
+    fire_event(event_name)
   end
 
   def can_fire?(event)
     event[:from].include?(state)
+  end
+
+  def allowed?(event)
+    return true if event[:guard].nil?
+
+    # TODO: rename fire_callback
+    res = fire_callback(event[:guard])
+    raise GuardIsNotBooleanError unless [true, false].include?(res)
+
+    res
   end
 
   def fire_callback(callback)
@@ -112,7 +125,7 @@ module StateMachine
       end
     end
 
-    def transitions(from:, to:, before: nil, after: nil)
+    def transitions(from:, to:, before: nil, after: nil, guard: nil)
       from = [*from]
 
       raise InvalidStateError unless from.any? { |s| states.include?(s) }
@@ -121,7 +134,8 @@ module StateMachine
       from_states = states.select { |s| from.include?(s.name) }
       to_state = states.select { |s| s.name == to }.first
 
-      { from: from_states, to: to_state, before: before, after: after }
+      { from: from_states, to: to_state, guard: guard,
+        before: before, after: after }
     end
 
     private

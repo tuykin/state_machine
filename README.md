@@ -48,18 +48,17 @@ Bonus task:
 TODO:
 - where to setup state? initialize - bad solution. It's not override-safe
 - guards
+- replace guard with when
+- provide -> lambda
 - diagram
-- extract state to class
 - extract states_collection to class
 - extract transition to class
 - extract event to class
 - check if method already defined
-- check transitions
 - how to initialize on include?
-- remove TODOs
 - check if event has more than one transitions statements
-- check if event exists
 - wrap to gem
+- resolve TODOs
 - what else should be checked in SM definition?
 - how initial state is being used?
 
@@ -68,3 +67,5 @@ QUESTIONS:
 - initial state required?
 - can we redefine state?
 - should raise InvalidCallback?
+- guarded transition should raise error on bang?
+- is it possible to have more than one transition in the event?
