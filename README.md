@@ -38,7 +38,7 @@ Consider implementing the following features:
 
 + Ensure that the definition of the state machine is valid (e.g., only a single initial state, no undefined states in transition definitions).
 + Raise an error when the event doesn't have any transitions allowed for the current state.
-- Define callbacks for entering a state, leaving a state or making a particular transition.
++ Define callbacks for entering a state, leaving a state or making a particular transition.
 + Check if the event can be triggered (e.g., by calling `#can_walk?`).
 - Define guard clauses for transitions by providing `:when` option to a transition definition. It can accept either a lambda, which implements the guard clause, or a symbol, which references the method name.
 
@@ -46,12 +46,13 @@ Bonus task:
 - Write a script to generate a diagram for the state machine showing states and possible transitions (e.g., using `graphviz` gem).
 
 TODO:
-- callbacks
+- where to setup state? initialize - bad solution. It's not override-safe
 - guards
 - diagram
 - extract state to class
 - extract states_collection to class
 - extract transition to class
+- extract event to class
 - check if method already defined
 - check transitions
 - how to initialize on include?
@@ -60,8 +61,10 @@ TODO:
 - check if event exists
 - wrap to gem
 - what else should be checked in SM definition?
+- how initial state is being used?
 
 QUESTIONS:
 - constructor is being overriden?
 - initial state required?
 - can we redefine state?
+- should raise InvalidCallback?

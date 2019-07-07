@@ -12,8 +12,9 @@ module StateMachine
     base.send(:setup)
   end
 
-  def initialize(state = nil)
-    @state = state || self.class.initial_state
+  def initialize(state_name = nil)
+    state = states.select { |s| s.name == state_name }.first || self.class.initial_state
+    transit(to: state)
 
     super()
   end
@@ -32,30 +33,46 @@ module StateMachine
 
   private
 
-  def transit(to)
+  def transit(to:)
     if states.include?(to)
+      fire_callback(to.before)
       @state = to
+      fire_callback(to.after)
       true
     else
       false
     end
   end
 
-  def fire(event_name)
-    if can_fire?(event_name)
-      transit(events[event_name][:to])
+  def fire_event(event_name)
+    event = events[event_name]
+
+    if can_fire?(event)
+      fire_callback(event[:before])
+      transit(to: events[event_name][:to])
+      fire_callback(event[:after])
       true
     else
       false
     end
   end
 
-  def fire!(event_name)
-    raise InvalidTransitionError unless fire(event_name)
+  def fire_event!(event_name)
+    raise InvalidTransitionError unless fire_event(event_name)
   end
 
-  def can_fire?(event_name)
-    events[event_name][:from].include?(state)
+  def can_fire?(event)
+    event[:from].include?(state)
+  end
+
+  def fire_callback(callback)
+    return if callback.nil?
+
+    if callback.is_a?(Proc)
+      instance_eval(&callback)
+    else
+      send(callback)
+    end
   end
 
   module ClassMethods
@@ -71,12 +88,12 @@ module StateMachine
       @initial_state
     end
 
-    def state(name, initial: false)
-      state = name # TODO: extract to class
+    def state(name, initial: false, before: nil, after: nil)
+      state = State.new(name: name, before: before, after: after)
 
       add_state(state)
 
-      define_method "#{state}?" do
+      define_method "#{state.name}?" do
         self.state == state
       end
 
@@ -87,21 +104,24 @@ module StateMachine
       @events[name] = yield block
 
       define_method "#{name}!" do
-        fire!(name)
+        fire_event!(name)
       end
 
       define_method "can_#{name}?" do
-        can_fire?(name)
+        can_fire?(events[name])
       end
     end
 
-    def transitions(from:, to:)
+    def transitions(from:, to:, before: nil, after: nil)
       from = [*from]
 
       raise InvalidStateError unless from.any? { |s| states.include?(s) }
       raise InvalidStateError unless states.include?(to)
 
-      { from: [*from], to: to }
+      from_states = states.select { |s| from.include?(s.name) }
+      to_state = states.select { |s| s.name == to }.first
+
+      { from: from_states, to: to_state, before: before, after: after }
     end
 
     private
