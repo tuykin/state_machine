@@ -1,5 +1,6 @@
 require 'state_machine'
 require 'models/movement_state'
+require 'models/callback_state'
 
 describe StateMachine do
   let(:klass) { MovementState }
@@ -104,6 +105,49 @@ describe StateMachine do
       expect {
         require 'models/invalid_state_class'
       }.to raise_error(StateMachine::InvalidStateError)
+    end
+  end
+
+  describe 'transition callbacks' do
+    let(:obj) { CallbackState.new }
+
+    it 'should fire before transition proc' do
+      obj.walk!
+      expect(obj.data).to include('before-walk-proc')
+    end
+
+    it 'should fire after transition' do
+      obj.walk!
+      obj.run!
+      expect(obj.data).to include('after-run')
+    end
+
+    it 'should fire after state change' do
+      obj.walk!
+      obj.run!
+      obj.hold!
+      expect(obj.data[-2]).to include('before-hold')
+      expect(obj.data[-1]).to include('after-hold')
+    end
+  end
+
+  describe 'state callbacks' do
+    let(:obj) { CallbackState.new }
+
+    xit 'should fire before initial proc' do
+      expect(obj.data).to include('before-standing-proc')
+    end
+
+    xit 'should fire after state change' do
+      obj.walk!
+      expect(obj.data).to include('after-walking')
+    end
+
+    xit 'should fire before and after state change' do
+      obj.walk!
+      obj.run!
+      expect(obj.data).to include('before-running')
+      expect(obj.data).to include('after-running')
     end
   end
 end

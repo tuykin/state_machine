@@ -41,21 +41,35 @@ module StateMachine
     end
   end
 
-  def fire(event_name)
-    if can_fire?(event_name)
+  def fire_event(event_name)
+    event = events[event_name]
+
+    if can_fire?(event)
+      fire_callback(event[:before])
       transit(events[event_name][:to])
+      fire_callback(event[:after])
       true
     else
       false
     end
   end
 
-  def fire!(event_name)
-    raise InvalidTransitionError unless fire(event_name)
+  def fire_event!(event_name)
+    raise InvalidTransitionError unless fire_event(event_name)
   end
 
-  def can_fire?(event_name)
-    events[event_name][:from].include?(state)
+  def can_fire?(event)
+    event[:from].include?(state)
+  end
+
+  def fire_callback(callback)
+    return if callback.nil?
+
+    if callback.is_a?(Proc)
+      instance_eval(&callback)
+    else
+      send(callback)
+    end
   end
 
   module ClassMethods
@@ -71,8 +85,8 @@ module StateMachine
       @initial_state
     end
 
-    def state(name, initial: false)
-      state = name # TODO: extract to class
+    def state(name, initial: false, before: nil, after: nil)
+      state = name
 
       add_state(state)
 
@@ -87,21 +101,21 @@ module StateMachine
       @events[name] = yield block
 
       define_method "#{name}!" do
-        fire!(name)
+        fire_event!(name)
       end
 
       define_method "can_#{name}?" do
-        can_fire?(name)
+        can_fire?(events[name])
       end
     end
 
-    def transitions(from:, to:)
+    def transitions(from:, to:, before: nil, after: nil)
       from = [*from]
 
       raise InvalidStateError unless from.any? { |s| states.include?(s) }
       raise InvalidStateError unless states.include?(to)
 
-      { from: [*from], to: to }
+      { from: [*from], to: to, before: before, after: after }
     end
 
     private

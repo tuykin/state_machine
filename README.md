@@ -47,11 +47,14 @@ Bonus task:
 
 TODO:
 - callbacks
+- add before/after to states
+- where to setup state? initialize - bad solution. It's not override-safe
 - guards
 - diagram
 - extract state to class
 - extract states_collection to class
 - extract transition to class
+- extract event to class
 - check if method already defined
 - check transitions
 - how to initialize on include?
@@ -60,8 +63,10 @@ TODO:
 - check if event exists
 - wrap to gem
 - what else should be checked in SM definition?
+- how initial state is being used?
 
 QUESTIONS:
 - constructor is being overriden?
 - initial state required?
 - can we redefine state?
+- should raise InvalidCallback?
