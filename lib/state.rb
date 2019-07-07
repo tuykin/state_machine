@@ -9,12 +9,13 @@ class State
     @after = after
   end
 
-  def ==(state)
-    if state.is_a?(Symbol)
-      name == state
-    else
-      name == state.name
-    end
+  def ==(other)
+    name ==
+      if other.is_a?(Symbol)
+        other
+      else
+        other.name
+      end
   end
 
   def to_s
