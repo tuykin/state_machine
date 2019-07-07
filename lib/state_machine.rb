@@ -12,8 +12,8 @@ module StateMachine
     base.send(:setup)
   end
 
-  def initialize(state = nil)
-    @state = state || self.class.initial_state
+  def initialize(state_name = nil)
+    @state = states.select { |s| s.name == state_name }.first || self.class.initial_state
 
     super()
   end
@@ -86,11 +86,11 @@ module StateMachine
     end
 
     def state(name, initial: false, before: nil, after: nil)
-      state = name
+      state = State.new(name: name, before: before, after: after)
 
       add_state(state)
 
-      define_method "#{state}?" do
+      define_method "#{state.name}?" do
         self.state == state
       end
 
@@ -115,7 +115,10 @@ module StateMachine
       raise InvalidStateError unless from.any? { |s| states.include?(s) }
       raise InvalidStateError unless states.include?(to)
 
-      { from: [*from], to: to, before: before, after: after }
+      from_states = states.select { |s| from.include?(s.name) }
+      to_state = states.select { |s| s.name == to }.first
+
+      { from: from_states, to: to_state, before: before, after: after }
     end
 
     private

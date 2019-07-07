@@ -1,4 +1,5 @@
 require 'state_machine'
+require 'state'
 require 'models/movement_state'
 require 'models/callback_state'
 
