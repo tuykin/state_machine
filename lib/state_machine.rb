@@ -13,7 +13,8 @@ module StateMachine
   end
 
   def initialize(state_name = nil)
-    @state = states.select { |s| s.name == state_name }.first || self.class.initial_state
+    state = states.select { |s| s.name == state_name }.first || self.class.initial_state
+    transit(to: state)
 
     super()
   end
@@ -32,9 +33,11 @@ module StateMachine
 
   private
 
-  def transit(to)
+  def transit(to:)
     if states.include?(to)
+      fire_callback(to.before)
       @state = to
+      fire_callback(to.after)
       true
     else
       false
@@ -46,7 +49,7 @@ module StateMachine
 
     if can_fire?(event)
       fire_callback(event[:before])
-      transit(events[event_name][:to])
+      transit(to: events[event_name][:to])
       fire_callback(event[:after])
       true
     else

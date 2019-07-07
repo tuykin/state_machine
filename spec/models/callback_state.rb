@@ -39,6 +39,18 @@ class CallbackState
     log('after-hold')
   end
 
+  def after_walking
+    log('after-walking')
+  end
+
+  def before_running
+    log('before-running')
+  end
+
+  def after_running
+    log('after-running')
+  end
+
   private
 
   def log(str)
