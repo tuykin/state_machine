@@ -51,9 +51,11 @@ TODO:
 - check if method already defined
 - check if <state>? exists
 - check transitions
+- wrap to gem
+- how to initialize on include?
+- add check to transits
 
 QUESTIONS:
 - constructor is being overriden?
-- how to initialize on include?
 - initial state required?
 - can we redefine state?

@@ -55,8 +55,6 @@ describe StateMachine do
         require 'models/state_already_defined_class'
       }.to raise_error(StateMachine::StateAlreadyDefinedError)
     end
-
-    it 'should define only allowed states'
   end
 
   describe 'events' do
@@ -97,6 +95,10 @@ describe StateMachine do
 
   describe 'transitions' do
     it 'should raise error when transition not allowed'
-    it 'should have no undefined states (in transitions)'
+    it 'should raise error if state undefined' do
+      expect {
+        require 'models/invalid_state_class'
+      }.to raise_error(StateMachine::InvalidStateError)
+    end
   end
 end

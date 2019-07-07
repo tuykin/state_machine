@@ -3,6 +3,7 @@
 module StateMachine
   InitialStateDuplicateError = Class.new(RuntimeError)
   StateAlreadyDefinedError = Class.new(RuntimeError)
+  InvalidStateError = Class.new(RuntimeError)
 
   def self.included(base)
     base.extend(ClassMethods)
@@ -74,6 +75,11 @@ module StateMachine
     end
 
     def transitions(from:, to:)
+      from = [*from]
+
+      raise InvalidStateError unless from.any? { |s| states.include?(s) }
+      raise InvalidStateError unless states.include?(to)
+
       { from: [*from], to: to }
     end
 
