@@ -4,6 +4,7 @@ module StateMachine
   InitialStateDuplicateError = Class.new(RuntimeError)
   StateAlreadyDefinedError = Class.new(RuntimeError)
   InvalidStateError = Class.new(RuntimeError)
+  InvalidTransitionError = Class.new(RuntimeError)
 
   def self.included(base)
     base.extend(ClassMethods)
@@ -29,12 +30,32 @@ module StateMachine
     @state
   end
 
-  def transit(_from, to)
-    @state = to
+  private
+
+  def transit(to)
+    if states.include?(to)
+      @state = to
+      true
+    else
+      false
+    end
   end
 
-  def can_transit?(name)
-    events[name][:from].include?(state)
+  def fire(event_name)
+    if can_fire?(event_name)
+      transit(events[event_name][:to])
+      true
+    else
+      false
+    end
+  end
+
+  def fire!(event_name)
+    raise InvalidTransitionError unless fire(event_name)
+  end
+
+  def can_fire?(event_name)
+    events[event_name][:from].include?(state)
   end
 
   module ClassMethods
@@ -66,11 +87,11 @@ module StateMachine
       @events[name] = yield block
 
       define_method "#{name}!" do
-        transit(events[name][:from], events[name][:to])
+        fire!(name)
       end
 
       define_method "can_#{name}?" do
-        can_transit?(name)
+        can_fire?(name)
       end
     end
 

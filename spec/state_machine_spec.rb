@@ -94,7 +94,12 @@ describe StateMachine do
   end
 
   describe 'transitions' do
-    it 'should raise error when transition not allowed'
+    it 'should raise error when transition not allowed' do
+      expect {
+        obj.hold!
+      }.to raise_error(StateMachine::InvalidTransitionError)
+    end
+
     it 'should raise error if state undefined' do
       expect {
         require 'models/invalid_state_class'
