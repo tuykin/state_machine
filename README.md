@@ -57,7 +57,6 @@ TODO:
 - check if method already defined
 - how to initialize on include?
 - check if event has more than one transitions statements
-- check if event exists
 - wrap to gem
 - resolve TODOs
 - what else should be checked in SM definition?
@@ -69,3 +68,4 @@ QUESTIONS:
 - can we redefine state?
 - should raise InvalidCallback?
 - guarded transition should raise error on bang?
+- is it possible to have more than one transition in the event?

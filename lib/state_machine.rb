@@ -60,6 +60,7 @@ module StateMachine
 
   def fire_event!(event_name)
     raise InvalidTransitionError unless can_fire?(events[event_name])
+
     fire_event(event_name)
   end
 
@@ -74,7 +75,7 @@ module StateMachine
     res = fire_callback(event[:guard])
     raise GuardIsNotBooleanError unless [true, false].include?(res)
 
-    return res
+    res
   end
 
   def fire_callback(callback)
