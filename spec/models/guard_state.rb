@@ -9,16 +9,16 @@ class GuardState
   state :running
 
   event :walk do
-    transitions from: :standing, to: :walking, guard: :walk_guard,
+    transitions from: :standing, to: :walking, when: :walk_guard,
               before: :before_run
   end
 
   event :run do
-    transitions from: [:standing, :walking], to: :running, guard: -> { flag }
+    transitions from: [:standing, :walking], to: :running, when: -> { flag }
   end
 
   event :hold do
-    transitions from: [:walking, :running], to: :standing, guard: :not_boolean
+    transitions from: [:walking, :running], to: :standing, when: :not_boolean
   end
 
   def initialize

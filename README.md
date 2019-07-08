@@ -40,14 +40,13 @@ Consider implementing the following features:
 + Raise an error when the event doesn't have any transitions allowed for the current state.
 + Define callbacks for entering a state, leaving a state or making a particular transition.
 + Check if the event can be triggered (e.g., by calling `#can_walk?`).
-- Define guard clauses for transitions by providing `:when` option to a transition definition. It can accept either a lambda, which implements the guard clause, or a symbol, which references the method name.
++ Define guard clauses for transitions by providing `:when` option to a transition definition. It can accept either a lambda, which implements the guard clause, or a symbol, which references the method name.
 
 Bonus task:
 - Write a script to generate a diagram for the state machine showing states and possible transitions (e.g., using `graphviz` gem).
 
 TODO:
 - where to setup state? initialize - bad solution. It's not override-safe
-- replace guard with when
 - diagram
 - extract states_collection to class
 - extract transition to class

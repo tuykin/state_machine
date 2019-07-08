@@ -125,7 +125,7 @@ module StateMachine
       end
     end
 
-    def transitions(from:, to:, before: nil, after: nil, guard: nil)
+    def transitions(from:, to:, before: nil, after: nil, when: nil)
       from = [*from]
 
       raise InvalidStateError unless from.any? { |s| states.include?(s) }
@@ -133,6 +133,8 @@ module StateMachine
 
       from_states = states.select { |s| from.include?(s.name) }
       to_state = states.select { |s| s.name == to }.first
+
+      guard = binding.local_variable_get(:when)
 
       { from: from_states, to: to_state, guard: guard,
         before: before, after: after }
