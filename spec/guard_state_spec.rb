@@ -19,8 +19,19 @@ describe GuardState do
     expect(obj.standing?).to be true
   end
 
-  it 'should transit when lambda guard is true'
-  it 'should not transit when lambda guard is false'
+  it 'should transit when lambda guard is true' do
+    expect(obj.standing?).to be true
+    obj.run!
+    expect(obj.running?).to be true
+  end
+
+  it 'should not transit when lambda guard is false' do
+    obj.flag = false
+
+    expect(obj.standing?).to be true
+    obj.run!
+    expect(obj.standing?).to be true
+  end
 
   it 'should not fire callback if guarded' do
     obj.flag = false

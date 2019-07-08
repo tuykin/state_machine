@@ -47,9 +47,7 @@ Bonus task:
 
 TODO:
 - where to setup state? initialize - bad solution. It's not override-safe
-- guards
 - replace guard with when
-- provide -> lambda
 - diagram
 - extract states_collection to class
 - extract transition to class
@@ -61,6 +59,7 @@ TODO:
 - resolve TODOs
 - what else should be checked in SM definition?
 - how initial state is being used?
+- update readme to use callbacks, guards, gem
 
 QUESTIONS:
 - constructor is being overriden?
