@@ -47,7 +47,7 @@ Bonus task:
 
 TODO:
 - where to setup state? initialize - bad solution. It's not override-safe
-- diagram
+- add initial state to diagram (doublecircle shape, point shape)
 - extract states_collection to class
 - extract transition to class
 - extract event to class

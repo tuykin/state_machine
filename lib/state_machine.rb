@@ -82,7 +82,7 @@ module StateMachine
     return if callback.nil?
 
     if callback.is_a?(Proc)
-      instance_exec &callback
+      instance_exec(&callback)
     else
       send(callback)
     end

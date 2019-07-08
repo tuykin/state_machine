@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 class Graph
   attr_reader :klass, :g
 
   def initialize(klass)
     @klass = klass
-    @g = GraphViz.new( :G, :type => :digraph )
+    @g = GraphViz.new(:G, type: :digraph)
 
     add_nodes
     add_edges
