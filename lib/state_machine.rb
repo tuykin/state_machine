@@ -14,7 +14,7 @@ module StateMachine
   end
 
   def initialize(state_name = nil)
-    state = states.select { |s| s.name == state_name }.first || self.class.initial_state
+    state = states.find { |s| s.name == state_name } || self.class.initial_state
     transit(to: state)
 
     super()
