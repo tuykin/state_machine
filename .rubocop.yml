@@ -5,3 +5,6 @@ Metrics/LineLength:
   Max: 99
 Documentation:
   Enabled: false
+Style:
+  Documentation:
+    Enabled: false
